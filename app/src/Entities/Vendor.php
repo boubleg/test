@@ -1,6 +1,6 @@
 <?php
 
-namespace Entities;
+namespace KhaibullinTest\Entities;
 
 class Vendor extends EntityBase
 {
@@ -9,6 +9,9 @@ class Vendor extends EntityBase
 
 	/** @var string  */
 	protected $_name;
+
+	/** @var  \SplFixedArray */
+	protected $_schedules = null;
 
 	public function __construct(int $id, string $name = '')
 	{
@@ -26,9 +29,9 @@ class Vendor extends EntityBase
 
 	/**
 	 * @param int $id
-	 * @return $this
+	 * @return Vendor
 	 */
-	public function setId($id)
+	public function setId($id) : Vendor
 	{
 		$this->_id = $id;
 		return $this;
@@ -44,11 +47,29 @@ class Vendor extends EntityBase
 
 	/**
 	 * @param string $name
-	 * @return $this
+	 * @return Vendor
 	 */
-	public function setName($name)
+	public function setName($name) : Vendor
 	{
 		$this->_name = $name;
+		return $this;
+	}
+
+	/**
+	 * @return \SplFixedArray
+	 */
+	public function getSchedules()
+	{
+		return $this->_schedules;
+	}
+
+	/**
+	 * @param \SplFixedArray $schedules
+	 * @return Vendor
+	 */
+	public function setSchedules($schedules) : Vendor
+	{
+		$this->_schedules = $schedules;
 		return $this;
 	}
 }

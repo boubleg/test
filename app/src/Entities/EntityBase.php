@@ -1,6 +1,6 @@
 <?php
 
-namespace Entities;
+namespace KhaibullinTest\Entities;
 
 abstract class EntityBase
 {

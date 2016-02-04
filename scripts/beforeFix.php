@@ -1,10 +1,20 @@
 <?php
 
-$conn = new \mysqli('127.0.0.1', 'root', 'root', 'test');
-const VENDOR_TABLE = 'vendor';
-const VENDOR_FIELD_ID = 'id';
-const VENDOR_FIELD_NAME = 'name';
-$sql = 'SELECT * FROM ' . VENDOR_TABLE . ' WHERE ' . VENDOR_FIELD_ID . ' = ' . 1;
-$result = $conn->query($sql)->fetch_all();
+#TODO: rename namespace
+spl_autoload_register(function($class) {
+	$prefix = 'KhaibullinTest\\';
+	$baseDir = __DIR__ . '/../app/src/';
+	if (strncmp($prefix, $class, strlen($prefix)) !== 0) {
+		return;
+	}
+	$relative_class = substr($class, strlen($prefix));
+	$file = $baseDir . str_replace('\\', '/', $relative_class) . '.php';
+	if (file_exists($file)) {
+		require $file;
+	}
+});
 
-var_dump($result);die;
+
+$vendor = \KhaibullinTest\Repository\VendorRepository::getById(1);
+$vendor->setSchedules(\KhaibullinTest\Repository\VendorRepository::getScheduleForVendor($vendor));
+var_dump($vendor);die;

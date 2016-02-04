@@ -1,8 +1,8 @@
 <?php
 
-namespace Repository;
+namespace KhaibullinTest\Repository;
 
-use db\DBManager;
+use KhaibullinTest\db\DBManager;
 
 abstract class RepositoryBase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace db;
+namespace KhaibullinTest\db;
 
 /**
  * Class DBManager
@@ -18,7 +18,14 @@ final class DBManager
 	public static function query(string $sql) : array
 	{
 		$result = self::_getConnection()->query($sql);
-		return $result instanceof \mysqli_result ? $result->fetch_all() : [];
+		if (!$result) {
+			self::_getConnection()->rollback();
+			echo $sql . ' failed: ' . self::_getConnection()->error;
+			return [];
+		} else {
+			self::_getConnection()->commit();
+			return $result->fetch_all(MYSQLI_ASSOC);
+		}
 	}
 
 	/**
@@ -40,10 +47,11 @@ final class DBManager
 			$config = self::_getDBConfig();
 			$connection = new \mysqli($config['host'], $config['username'], $config['password'], $config['database']);
 
-			if (mysqli_connect_errno() !== 0) {
-				die('database error: ' . mysqli_connect_error());
+			if ($connection->connect_errno !== 0) {
+				die('Database error: ' . $connection->error);
 			}
 
+			$connection->autocommit(false);
 			self::$_connection = $connection;
 		}
 		return self::$_connection;
