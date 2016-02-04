@@ -13,18 +13,21 @@ final class DBManager
 
 	/**
 	 * @param string $sql
-	 * @return array
+	 * @return array|bool
 	 */
-	public static function query(string $sql) : array
+	public static function query(string $sql)
 	{
 		$result = self::_getConnection()->query($sql);
-		if (!$result) {
+		if ($result === false) {
 			self::_getConnection()->rollback();
 			echo $sql . ' failed: ' . self::_getConnection()->error;
-			return [];
-		} else {
+			return $result;
+		} elseif($result instanceof \mysqli_result) {
 			self::_getConnection()->commit();
 			return $result->fetch_all(MYSQLI_ASSOC);
+		} else {
+			self::_getConnection()->commit();
+			return $result;
 		}
 	}
 
