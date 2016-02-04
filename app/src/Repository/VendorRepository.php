@@ -40,21 +40,43 @@ final class VendorRepository extends RepositoryBase
 	}
 
 	/**
-	 * @return \SplFixedArray
+	 * @return array
 	 */
-	public static function getAll() : \SplFixedArray
+	public static function getAll() : array
 	{
-		$sql = 'SELECT * FROM ' . self::VENDOR_TABLE;
-		$result = self::query($sql);
+		$sql =
+			'SELECT
+				v.id, v.name, vs.weekday, vs.all_day, vs.start_hour, vs.stop_hour
+			FROM
+				vendor v
+			RIGHT JOIN -- we need only vendors with schedule --
+				vendor_schedule vs
+			ON
+				v.id = vs.vendor_id
+			ORDER BY
+				v.id';
 
-		$vendors = new \SplFixedArray(count($result));
-		for ($i = 0; $i < count($result); $i++) {
-			$row = $result[$i];
-			$vendors[$i]= new Vendor(
-				$row[self::VENDOR_FIELD_ID],
-				$row[self::VENDOR_FIELD_NAME] ?? ''
+		$result = self::query($sql);
+		$vendors = [];
+		foreach ($result as $row) {
+			if (!isset($vendors[$row['id']])) {
+				$vendors[$row['id']] = new Vendor(
+					(int)$row['id'],
+					$row['name']
+				);
+			}
+
+			$vendors[$row['id']]->addSchedule(
+				new Schedule(
+					$row['weekday'],
+					$row['all_day'] ? (bool)$row['all_day'] : false,
+					$row['start_hour'] ?? '',
+					$row['stop_hour'] ?? ''
+				)
 			);
 		}
+
+		return $vendors;
 	}
 
 	/**
@@ -68,7 +90,7 @@ final class VendorRepository extends RepositoryBase
 		$schedules = new \SplFixedArray(count($result));
 		for ($i = 0; $i < count($result); $i++) {
 			$row = $result[$i];
-			$schedules[$i]= new Schedule(
+			$schedules[$i] = new Schedule(
 				$row[self::VENDOR_SCHEDULE_WEEKDAY],
 				$row[self::VENDOR_SCHEDULE_ALL_DAY] ? (bool)$row[self::VENDOR_SCHEDULE_ALL_DAY] : false,
 				$row[self::VENDOR_SCHEDULE_WEEKDAY] ?? '',

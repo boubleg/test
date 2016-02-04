@@ -1,5 +1,7 @@
 <?php
 
+$start = microtime(true);
+
 #TODO: rename namespace
 spl_autoload_register(function($class) {
 	$prefix = 'KhaibullinTest\\';
@@ -14,7 +16,13 @@ spl_autoload_register(function($class) {
 	}
 });
 
-
-$vendor = \KhaibullinTest\Repository\VendorRepository::getById(1);
-$vendor->setSchedules(\KhaibullinTest\Repository\VendorRepository::getScheduleForVendor($vendor));
-var_dump($vendor);die;
+//for($i = 1; $i < 40000; $i++)
+//{
+//	\KhaibullinTest\db\DBManager::query('
+//		insert into vendor_schedule (vendor_id, weekday, all_day, start_hour, stop_hour)
+//		values(' . rand(1,5900) . ', ' . rand(1,7) . ', ' . rand(0,1) . ', "12:00:00", "22:00:00")
+//	');
+//}
+//die;
+$vendors = \KhaibullinTest\Repository\VendorRepository::getAll();
+var_dump(microtime(true) - $start);die;

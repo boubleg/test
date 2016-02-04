@@ -10,8 +10,8 @@ class Vendor extends EntityBase
 	/** @var string  */
 	protected $_name;
 
-	/** @var  \SplFixedArray */
-	protected $_schedules = null;
+	/** @var  array */
+	protected $_schedules = [];
 
 	public function __construct(int $id, string $name = '')
 	{
@@ -64,12 +64,22 @@ class Vendor extends EntityBase
 	}
 
 	/**
-	 * @param \SplFixedArray $schedules
+	 * @param array $schedules
 	 * @return Vendor
 	 */
-	public function setSchedules($schedules) : Vendor
+	public function setSchedules(array $schedules) : Vendor
 	{
 		$this->_schedules = $schedules;
+		return $this;
+	}
+
+	/**
+	 * @param Schedule $schedule
+	 * @return Vendor
+	 */
+	public function addSchedule(Schedule $schedule) : Vendor
+	{
+		$this->_schedules[]= $schedule;
 		return $this;
 	}
 }
