@@ -31,12 +31,26 @@ class Schedule extends EntityBase
     /** @var  bool */
     protected $_isAllDay;
 
-    /** @var  int */
+    /**
+     * I cannot see a reason here to store it not as a string
+     *
+     * @var  string
+     */
     protected $_startHour;
 
-    /** @var  int */
+    /**
+     * Same here
+     *
+     * @var  string
+     */
     protected $_stopHour;
 
+    /**
+     * @param int $weekday
+     * @param bool|false $isAllDay
+     * @param string $startHour
+     * @param string $stopHour
+     */
     public function __construct(int $weekday, bool $isAllDay = false, string $startHour = '', string $stopHour = '')
     {
         $this->setWeekday($weekday);
@@ -93,7 +107,7 @@ class Schedule extends EntityBase
     /**
      * @return boolean
      */
-    public function isIsAllDay() : bool
+    public function isAllDay() : bool
     {
         return $this->_isAllDay;
     }
@@ -109,9 +123,9 @@ class Schedule extends EntityBase
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getStartHour() : int
+    public function getStartHour() : string
     {
         return $this->_startHour;
     }
@@ -122,14 +136,14 @@ class Schedule extends EntityBase
      */
     public function setStartHour(string $startHour) : Schedule
     {
-        $this->_startHour = strtotime($startHour);
+        $this->_startHour = $startHour;
         return $this;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getStopHour() : int
+    public function getStopHour() : string
     {
         return $this->_stopHour;
     }
@@ -140,7 +154,7 @@ class Schedule extends EntityBase
      */
     public function setStopHour(string $stopHour) : Schedule
     {
-        $this->_stopHour = strtotime($stopHour);
+        $this->_stopHour = $stopHour;
         return $this;
     }
 
@@ -151,5 +165,19 @@ class Schedule extends EntityBase
     protected static function _dateToDayNumber(string $date) : int
     {
         return self::$daysToNumbers[date('l', strtotime($date))];
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString() : string
+    {
+        $startHourString = $this->getStartHour() ? "'" . $this->getStartHour() . "'" : 'null';
+        $stopHourString = $this->getStopHour() ?  "'" . $this->getStopHour() . "'" : 'null';
+        return
+            $this->getWeekday() . ', ' .
+            (int)$this->isAllDay() . ', ' .
+            $startHourString . ', ' .
+            $stopHourString;
     }
 }

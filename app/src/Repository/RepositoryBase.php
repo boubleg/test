@@ -6,7 +6,11 @@ use KhaibullinTest\db\DBManager;
 
 abstract class RepositoryBase
 {
-	public static function query(string $sql) : array
+    /**
+     * @param string $sql
+     * @return array|bool
+     */
+	public static function query(string $sql)
 	{
 		return DBManager::query($sql);
 	}

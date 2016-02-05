@@ -99,7 +99,7 @@ final class VendorRepository extends RepositoryBase
             return false;
         }
         $idsString = implode(', ', $ids);
-        $sql = "DELETE FROM vendor_schedule vs WHERE vs.vendor_id IN ($idsString)";
+        $sql = "DELETE FROM vendor_schedule WHERE vendor_id IN ($idsString)";
         return self::query($sql);
     }
 
@@ -142,5 +142,26 @@ final class VendorRepository extends RepositoryBase
         }
 
         return $vendors;
+    }
+
+    /**
+     * @param array $schedulesVendors
+     * @return bool
+     */
+    public static function writeSchedulesToDB(array $schedulesVendors) : bool
+    {
+        $sql = 'INSERT INTO vendor_schedule vs(vendor_id, weekday, all_day, start_hour, stop_hour) VALUES';
+
+        /** @var Schedule $schedule */
+        foreach ($schedulesVendors as $vendorId => $schedules) {
+            foreach ($schedules as $schedule) {
+                $sql .= '(' . $vendorId . ', ' . $schedule . '),';
+            }
+        }
+
+        $sql = substr_replace($sql, '', -1);
+
+        $result = self::query($sql);
+        return $result;
     }
 }
