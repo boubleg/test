@@ -23,7 +23,8 @@ final class Main
 
         //$this->_populateTestDB();
 
-        \KhaibullinTest\Repository\VendorRepository::getAll();
+        $vsd = \KhaibullinTest\Repository\VendorRepository::getAllSpecialDays();
+        var_dump($vsd);die;
     }
 
 
