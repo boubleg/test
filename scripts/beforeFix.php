@@ -3,7 +3,11 @@
 $start = microtime(true);
 
 use \KhaibullinTest\db\DBManager;
+use \KhaibullinTest\Repository\VendorRepository as vr;
 
+/**
+ * Class Main
+ */
 final class Main
 {
     public function __construct()
@@ -22,11 +26,30 @@ final class Main
         });
 
         //$this->_populateTestDB();
+        $this->_main();
+    }
 
-        $vsd = \KhaibullinTest\Repository\VendorRepository::getAllSpecialDays();
-        $result = \KhaibullinTest\Repository\VendorRepository::deleteAllSchedulesForSpecials(array_keys($vsd));
-        $vs = \KhaibullinTest\Repository\VendorRepository::writeSchedulesToDB($vsd);
-        var_dump($vs);die;
+    private function _main()
+    {
+        $backupTableName = 'vendor_schedule_backup_' . date('Y_m_d_H_i_s');
+        try {
+            echo "Backing up vendor_schedule table into $backupTableName table\n";
+            vr::backupSchedules($backupTableName);
+            echo "Done\n";
+            $specialDays = vr::getAllSpecialDays();
+            echo "Retrieved " . count($specialDays) . " special days records\n";
+            echo "Removing schedules to be replaced by special events\n";
+            vr::deleteAllSchedulesForSpecials(array_keys($specialDays));
+            echo "Done\nWriting new schedules based on the special days\n";
+            vr::writeSchedulesToDB($specialDays);
+            echo "Done\n";
+        } catch (\Exception $e) {
+            echo "Exception caught: " . $e->getMessage() . "\n";
+            echo "Restoring data from the backup\n";
+            vr::restoreBackupSchedules($backupTableName);
+            echo "Done\n";
+            die;
+        }
     }
 
 
@@ -98,5 +121,5 @@ final class Main
 
 $main = new Main();
 
-echo(microtime(true) - $start) . "s\n";
+echo "Time spent: " . (microtime(true) - $start) . "s\n";
 die;

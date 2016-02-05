@@ -12,16 +12,17 @@ final class DBManager
     private static $_connection = null;
 
     /**
-     * @param string $sql
+     * @param string|string $sql
      * @return array|bool
+     * @throws \Exception
      */
     public static function query(string $sql)
     {
         $result = self::_getConnection()->query($sql);
         if ($result === false) {
             self::_getConnection()->rollback();
-            echo $sql . ' failed: ' . self::_getConnection()->error . "\n";
-            return $result;
+            echo substr($sql, 0, 500) . '... failed: ' . self::_getConnection()->error . "\n";
+            throw new \Exception('Could not execute db query');
         } elseif ($result instanceof \mysqli_result) {
             self::_getConnection()->commit();
             return $result->fetch_all(MYSQLI_ASSOC);
