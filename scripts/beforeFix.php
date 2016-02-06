@@ -10,7 +10,7 @@ use \KhaibullinTest\Repository\VendorRepository as vr;
  */
 final class Main
 {
-    public function __construct()
+    public function __construct($populateDB = false)
     {
         spl_autoload_register(function ($class) {
             $prefix = 'KhaibullinTest\\';
@@ -25,7 +25,9 @@ final class Main
             }
         });
 
-        //$this->_populateTestDB();
+        if ($populateDB) {
+            $this->_populateTestDB();
+        }
         $this->_main();
     }
 
@@ -39,7 +41,7 @@ final class Main
             $specialDays = vr::getAllSpecialDays();
             echo "Retrieved " . count($specialDays) . " special days records\n";
             echo "Removing schedules to be replaced by special events\n";
-            vr::deleteAllSchedulesForSpecials(array_keys($specialDays));
+            vr::deleteAllSchedulesForSpecials();
             echo "Done\nWriting new schedules based on the special days\n";
             vr::writeSchedulesToDB($specialDays);
             echo "Done\n";
@@ -119,7 +121,7 @@ final class Main
     }
 }
 
-$main = new Main();
+$main = new Main($argv[1] == '--populate');
 
 echo "Time spent: " . (microtime(true) - $start) . "s\n";
 die;

@@ -12,7 +12,7 @@ final class DBManager
     private static $_connection = null;
 
     /**
-     * @param string|string $sql
+     * @param string $sql
      * @return array|bool
      * @throws \Exception
      */
