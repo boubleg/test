@@ -2,6 +2,8 @@
 
 namespace KhaibullinTest\Entities;
 
+use KhaibullinTest\Repository\RepositoryBase;
+
 class Schedule extends EntityBase
 {
     const WEEKDAY_MONDAY = 1;
@@ -45,14 +47,24 @@ class Schedule extends EntityBase
      */
     protected $_stopHour;
 
+	/**
+	 * I would usually not have this field here, rather making Vendor object have multiple Schedules
+	 * but since in that task I'm not using Vendor entities anywhere it would've lead to unnecessary complexity
+	 *
+	 * @var  int
+	 */
+    protected $_vendorID;
+
     /**
+	 * @param int $vendorId
      * @param int $weekday
      * @param bool|false $isAllDay
      * @param string $startHour
      * @param string $stopHour
      */
-    public function __construct(int $weekday, bool $isAllDay = false, string $startHour = '', string $stopHour = '')
+    public function __construct(int $vendorId, int $weekday, bool $isAllDay = false, string $startHour = '', string $stopHour = '')
     {
+		$this->setVendorID($vendorId);
         $this->setWeekday($weekday);
         $this->setIsAllDay($isAllDay);
         $this->setStartHour($startHour);
@@ -62,6 +74,7 @@ class Schedule extends EntityBase
     /**
      * Will create a Schedule object based on the data from vendor_special_day table or return null in case it is closed all day
      *
+	 * @param int $vendorId
      * @param string $date
      * @param string $eventType
      * @param string $isAllDay
@@ -69,16 +82,15 @@ class Schedule extends EntityBase
      * @param string $endHour
      * @return Schedule|null
      */
-    public static function createFromSpecialDay(string $date, string $eventType, string $isAllDay, string $startHour, string $endHour)
+    public static function createFromSpecialDay(int $vendorId, string $date, string $eventType, string $isAllDay, string $startHour, string $endHour)
     {
-        $isAllDayClosed = (bool)$isAllDay && $eventType == self::EVENT_TYPE_CLOSED ? true : false;
-
         //if it is closed all day there simply will not be a schedule for that day
-        if ($isAllDayClosed) {
+        if ((bool)$isAllDay && $eventType == self::EVENT_TYPE_CLOSED) {
             return null;
         }
 
         return new self(
+			$vendorId,
             self::_dateToDayNumber($date),
             (bool)$isAllDay && $eventType == self::EVENT_TYPE_OPENED ? true : false,
             $startHour,
@@ -158,6 +170,24 @@ class Schedule extends EntityBase
         return $this;
     }
 
+	/**
+	 * @return int
+	 */
+	public function getVendorID() : int
+	{
+		return $this->_vendorID;
+	}
+
+	/**
+	 * @param int $vendorID
+	 * @return Schedule
+	 */
+	public function setVendorID($vendorID) : Schedule
+	{
+		$this->_vendorID = $vendorID;
+		return $this;
+	}
+
     /**
      * @param string $date
      * @return int
@@ -172,12 +202,14 @@ class Schedule extends EntityBase
      */
     public function __toString() : string
     {
-        $startHourString = $this->getStartHour() ? "'" . $this->getStartHour() . "'" : 'null';
-        $stopHourString = $this->getStopHour() ?  "'" . $this->getStopHour() . "'" : 'null';
+        $startHourString = $this->getStartHour() ? RepositoryBase::encloseString($this->getStartHour()) : 'null';
+        $stopHourString = $this->getStopHour() ?  RepositoryBase::encloseString($this->getStopHour()) : 'null';
+
         return
+			'(' . $this->getVendorID() . ', ' .
             $this->getWeekday() . ', ' .
             (int)$this->isAllDay() . ', ' .
             $startHourString . ', ' .
-            $stopHourString;
+            $stopHourString . '),';
     }
 }

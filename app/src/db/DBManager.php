@@ -19,7 +19,7 @@ final class DBManager
     public static function query(string $sql)
     {
         $result = self::_getConnection()->query($sql);
-        if ($result === false) {
+        if (false === $result) {
             self::_getConnection()->rollback();
             echo substr($sql, 0, 500) . '... failed: ' . self::_getConnection()->error . "\n";
             throw new \Exception('Could not execute db query');
@@ -37,12 +37,12 @@ final class DBManager
      */
     private static function _getConnection() : \mysqli
     {
-        if (self::$_connection !== null && !self::$_connection->ping()) {
+        if (null !== self::$_connection && !self::$_connection->ping()) {
             if (self::$_connection instanceof \mysqli) {
                 self::$_connection->close();
             }
             self::$_connection = null;
-        } elseif (self::$_connection === null) {
+        } elseif (null === self::$_connection) {
 
             if (!class_exists('\mysqli')) {
                 die('mysqli is not available.');
@@ -66,6 +66,10 @@ final class DBManager
      */
     private static function _getDBConfig() : array
     {
-        return json_decode(file_get_contents('/vagrant/app/config/mysql.json'), true);
+		try {
+			return json_decode(file_get_contents('/vagrant/app/config/mysql.json'), true);
+		} catch (\Exception $e) {
+			die('Unable to read DB config file');
+		}
     }
 }

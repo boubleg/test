@@ -53,15 +53,15 @@ final class VendorRepository extends RepositoryBase
     /**
      * @return array
      */
-    public static function getAllSpecialDays() : array
+    public static function getAllSpecialDaysAsSchedules() : array
     {
         $sql =
             "SELECT
-				v.id, v.name, vsd.special_date, vsd.event_type, vsd.all_day, vsd.start_hour, vsd.stop_hour
+				v.id, vsd.special_date, vsd.event_type, vsd.all_day, vsd.start_hour, vsd.stop_hour
 			FROM
-				vendor v
-			RIGHT JOIN -- we need only vendors with special days --
 				vendor_special_day vsd
+			INNER JOIN
+				vendor v
 			ON
 				v.id = vsd.vendor_id
 			WHERE
@@ -69,15 +69,14 @@ final class VendorRepository extends RepositoryBase
 			BETWEEN
 			    '2015-12-21'
             AND
-                '2015-12-27'
-			ORDER BY
-				v.id, vsd.special_date";
+                '2015-12-27'";
 
         $result = self::query($sql);
-        $vendors = [];
+        $schedules = [];
 
         foreach ($result as $row) {
             $schedule = Schedule::createFromSpecialDay(
+				$row['id'],
                 $row['special_date'],
                 $row['event_type'],
                 $row['all_day'],
@@ -89,31 +88,31 @@ final class VendorRepository extends RepositoryBase
                 continue;
             }
 
-
-            if (!isset($vendors[$row['id']])) {
-                $vendors[$row['id']] = [];
-            }
-
-            $vendors[$row['id']][] = $schedule;
+			$schedules[] = $schedule;
         }
 
-        return $vendors;
+        return $schedules;
     }
 
     /**
-     * @param array $schedulesVendors
+     * @param array $schedules
      * @return bool
      */
-    public static function writeSchedulesToDB(array $schedulesVendors) : bool
+    public static function writeSchedulesToDB(array $schedules) : bool
     {
         $sql = 'INSERT INTO vendor_schedule(vendor_id, weekday, all_day, start_hour, stop_hour) VALUES';
 
-        /** @var Schedule $schedule */
-        foreach ($schedulesVendors as $vendorId => $schedules) {
-            foreach ($schedules as $schedule) {
-                $sql .= '(' . $vendorId . ', ' . $schedule . '),';
-            }
-        }
+//		$sql .= array_reduce(
+//			$schedules,
+//			function (string $a, string $b) {
+//				return $a . $b;
+//			},
+//			''
+//		);
+
+		foreach ($schedules as $schedule) {
+			$sql .= $schedule;
+		}
 
         $sql = substr_replace($sql, '', -1);
 

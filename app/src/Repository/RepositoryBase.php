@@ -4,6 +4,10 @@ namespace KhaibullinTest\Repository;
 
 use KhaibullinTest\db\DBManager;
 
+/**
+ * Class RepositoryBase
+ * @package KhaibullinTest\Repository
+ */
 abstract class RepositoryBase
 {
     /**
@@ -13,5 +17,14 @@ abstract class RepositoryBase
 	public static function query(string $sql)
 	{
 		return DBManager::query($sql);
+	}
+
+	/**
+	 * @param string $str
+	 * @return string
+	 */
+	public static function encloseString(string $str) : string
+	{
+		return "'$str'";
 	}
 }

@@ -10,6 +10,10 @@ use \KhaibullinTest\Repository\VendorRepository as vr;
  */
 final class Main
 {
+	/**
+	 * Main constructor.
+	 * @param bool $populateDB
+	 */
     public function __construct($populateDB = false)
     {
         spl_autoload_register(function ($class) {
@@ -38,7 +42,7 @@ final class Main
             echo "Backing up vendor_schedule table into $backupTableName table\n";
             vr::backupSchedules($backupTableName);
             echo "Done\n";
-            $specialDays = vr::getAllSpecialDays();
+            $specialDays = vr::getAllSpecialDaysAsSchedules();
             echo "Retrieved " . count($specialDays) . " special days records\n";
             echo "Removing schedules to be replaced by special events\n";
             vr::deleteAllSchedulesForSpecials();
@@ -121,7 +125,7 @@ final class Main
     }
 }
 
-$main = new Main($argv[1] == '--populate');
+$main = new Main('--populate' === $argv[1]);
 
 echo "Time spent: " . (microtime(true) - $start) . "s\n";
 die;
