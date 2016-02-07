@@ -4,6 +4,10 @@ namespace KhaibullinTest\Entities;
 
 use KhaibullinTest\Repository\RepositoryBase;
 
+/**
+ * Class Schedule
+ * @package KhaibullinTest\Entities
+ */
 class Schedule extends EntityBase
 {
     const WEEKDAY_MONDAY = 1;

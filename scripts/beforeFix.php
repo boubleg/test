@@ -3,7 +3,7 @@
 $start = microtime(true);
 
 use \KhaibullinTest\db\DBManager;
-use \KhaibullinTest\Repository\VendorRepository as vr;
+use \KhaibullinTest\Repository\ScheduleRepository as sr;
 
 /**
  * Class Main
@@ -32,36 +32,36 @@ final class Main
         );
 
         if ($populateDB) {
-            $this->_populateTestDB();
+            $this->populateTestDB();
         }
-        $this->_main();
+        $this->main();
     }
 
-    private function _main()
+    private function main()
     {
-        $backupTableName = 'vendor_schedule_backup_' . date('Y_m_d_H_i_s');
+        $backupTableName = DBManager::getDBConfig('backupTableName');
         try {
             echo "Backing up vendor_schedule table into $backupTableName table\n";
-            vr::backupSchedules($backupTableName);
+            sr::backupSchedules($backupTableName);
             echo "Done\n";
-            $specialDays = vr::getAllSpecialDaysAsSchedules();
+            $specialDays = sr::getAllSpecialDaysAsSchedules();
             echo "Retrieved " . count($specialDays) . " special days records\n";
             echo "Removing schedules to be replaced by special events\n";
-            vr::deleteAllSchedulesForSpecials();
+            sr::deleteAllSchedulesForSpecials();
             echo "Done\nWriting new schedules based on the special days\n";
-            vr::writeSchedulesToDB($specialDays);
+            sr::writeSchedulesToDB($specialDays);
             echo "Done\n";
         } catch (\Exception $e) {
             echo "Exception caught: " . $e->getMessage() . "\n";
             echo "Restoring data from the backup\n";
-            vr::restoreBackupSchedules($backupTableName);
+            sr::restoreBackupSchedules($backupTableName);
             echo "Done\n";
             die;
         }
     }
 
 
-    private function _populateTestDB()
+    private function populateTestDB()
     {
         echo "Begin populating DB with test data\n";
 

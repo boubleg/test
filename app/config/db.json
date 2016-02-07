@@ -1,7 +1,8 @@
 {
+  "adapter": "mysql",
   "host": "127.0.0.1",
   "username": "root",
   "password": "root",
   "database": "test",
-  "backupTableName": "vendor_schedule_backup"
+  "backupTableName": "vendor_schedule_backup_2015_12"
 }

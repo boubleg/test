@@ -8,11 +8,11 @@ use KhaibullinTest\Entities\Schedule;
  * Class VendorRepository
  * @package Repository
  */
-final class VendorRepository extends RepositoryBase
+final class ScheduleRepository extends RepositoryBase
 {
     public static function deleteAllSchedulesForSpecials()
     {
-        $sql = 'SELECT
+        $sql = "SELECT
                     DISTINCT(vs.id)
                 FROM
                     vendor_schedule vs
@@ -21,7 +21,13 @@ final class VendorRepository extends RepositoryBase
                 ON
                     vs.vendor_id = vsd.vendor_id
                 AND
-                    vs.weekday = DAYOFWEEK(vsd.special_date)';
+                    vs.weekday = DAYOFWEEK(vsd.special_date - 1) -- in DAYOFWEEK Sunday = 1, Monday = 2, etc.
+                WHERE
+                    vsd.special_date
+                BETWEEN
+                    '2015-12-21'
+                AND
+                    '2015-12-27'";
 
         $ids = self::query($sql);
 
@@ -60,19 +66,24 @@ final class VendorRepository extends RepositoryBase
     {
         $sql =
             "SELECT
-				v.id, vsd.special_date, vsd.event_type, vsd.all_day, vsd.start_hour, vsd.stop_hour
-			FROM
-				vendor_special_day vsd
-			INNER JOIN
-				vendor v
-			ON
-				v.id = vsd.vendor_id
-			WHERE
-			    vsd.special_date
-			BETWEEN
-			    '2015-12-21'
+                v.id,
+                vsd.special_date,
+                vsd.event_type,
+                vsd.all_day,
+                vsd.start_hour,
+                vsd.stop_hour
+            FROM
+                vendor_special_day vsd
+            INNER JOIN
+                vendor v
+            ON
+                v.id = vsd.vendor_id
+            WHERE
+                vsd.special_date
+            BETWEEN
+                '2015-12-21'
             AND
-                '2015-12-27'";
+                '2015-12-27';";
 
         $result = self::query($sql);
         $schedules = [];
@@ -104,13 +115,13 @@ final class VendorRepository extends RepositoryBase
     {
         $sql = 'INSERT INTO vendor_schedule(vendor_id, weekday, all_day, start_hour, stop_hour) VALUES ';
 
-//		$sql .= array_reduce(
-//			$schedules,
-//			function (string $a, string $b) {
-//				return $a . $b;
-//			},
-//			''
-//		);
+//        $sql .= array_reduce(
+//            $schedules,
+//            function (string $a, string $b) {
+//                return $a . $b;
+//            },
+//            ''
+//        );
 
         foreach ($schedules as $schedule) {
             $sql .= $schedule;
@@ -125,10 +136,14 @@ final class VendorRepository extends RepositoryBase
 
 
     /**
+     * Generally I would prefer to have the whole DB backed up somewhere
+     *
      * @param string $backupTableName
      */
     public static function backupSchedules(string $backupTableName)
     {
+        $sql = "DROP TABLE IF EXISTS $backupTableName;";
+        self::query($sql);
         $sql = "CREATE TABLE $backupTableName LIKE vendor_schedule;";
         self::query($sql);
         $sql = "INSERT INTO $backupTableName SELECT * FROM vendor_schedule;";
@@ -140,6 +155,8 @@ final class VendorRepository extends RepositoryBase
      */
     public static function restoreBackupSchedules(string $backupTableName)
     {
+        $sql = "TRUNCATE TABLE vendor_schedule";
+        self::query($sql);
         $sql = "REPLACE INTO vendor_schedule SELECT * FROM $backupTableName;";
         self::query($sql);
         $sql = "DROP TABLE $backupTableName;";
