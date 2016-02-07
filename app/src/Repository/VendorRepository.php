@@ -25,9 +25,12 @@ final class VendorRepository extends RepositoryBase
 
         $ids = self::query($sql);
 
-        array_walk($ids, function(&$x) {
-            $x = $x['id'];
-        });
+        array_walk(
+            $ids,
+            function (&$x) {
+                $x = $x['id'];
+            }
+        );
 
         $sql = 'DELETE FROM vendor_schedule WHERE id IN (' . implode(',', $ids) . ');';
 
@@ -75,20 +78,19 @@ final class VendorRepository extends RepositoryBase
         $schedules = [];
 
         foreach ($result as $row) {
-            $schedule = Schedule::createFromSpecialDay(
-				$row['id'],
+            if (!$schedule = Schedule::createFromSpecialDay(
+                $row['id'],
                 $row['special_date'],
                 $row['event_type'],
                 $row['all_day'],
                 $row['start_hour'] ?? '',
                 $row['stop_hour'] ?? ''
-            );
-
-            if (null === $schedule) {
+            )
+            ) {
                 continue;
             }
 
-			$schedules[] = $schedule;
+            $schedules[] = $schedule;
         }
 
         return $schedules;
@@ -100,7 +102,7 @@ final class VendorRepository extends RepositoryBase
      */
     public static function writeSchedulesToDB(array $schedules) : bool
     {
-        $sql = 'INSERT INTO vendor_schedule(vendor_id, weekday, all_day, start_hour, stop_hour) VALUES';
+        $sql = 'INSERT INTO vendor_schedule(vendor_id, weekday, all_day, start_hour, stop_hour) VALUES ';
 
 //		$sql .= array_reduce(
 //			$schedules,
@@ -110,13 +112,14 @@ final class VendorRepository extends RepositoryBase
 //			''
 //		);
 
-		foreach ($schedules as $schedule) {
-			$sql .= $schedule;
-		}
+        foreach ($schedules as $schedule) {
+            $sql .= $schedule;
+        }
 
         $sql = substr_replace($sql, '', -1);
 
         $result = self::query($sql);
+
         return $result;
     }
 

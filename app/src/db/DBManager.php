@@ -8,8 +8,8 @@ namespace KhaibullinTest\db;
  */
 final class DBManager
 {
-    /** @var \mysqli $_connection */
-    private static $_connection = null;
+    /** @var \mysqli $connection */
+    private static $connection = null;
 
     /**
      * @param string $sql
@@ -25,9 +25,11 @@ final class DBManager
             throw new \Exception('Could not execute db query');
         } elseif ($result instanceof \mysqli_result) {
             self::_getConnection()->commit();
+
             return $result->fetch_all(MYSQLI_ASSOC);
         } else {
             self::_getConnection()->commit();
+
             return $result;
         }
     }
@@ -37,18 +39,18 @@ final class DBManager
      */
     private static function _getConnection() : \mysqli
     {
-        if (null !== self::$_connection && !self::$_connection->ping()) {
-            if (self::$_connection instanceof \mysqli) {
-                self::$_connection->close();
+        if (null !== self::$connection && !self::$connection->ping()) {
+            if (self::$connection instanceof \mysqli) {
+                self::$connection->close();
             }
-            self::$_connection = null;
-        } elseif (null === self::$_connection) {
+            self::$connection = null;
+        } elseif (null === self::$connection) {
 
             if (!class_exists('\mysqli')) {
                 die('mysqli is not available.');
             }
 
-            $config = self::_getDBConfig();
+            $config = self::getDBConfig();
             $connection = new \mysqli($config['host'], $config['username'], $config['password'], $config['database']);
 
             if ($connection->connect_errno !== 0) {
@@ -56,20 +58,21 @@ final class DBManager
             }
 
             $connection->autocommit(false);
-            self::$_connection = $connection;
+            self::$connection = $connection;
         }
-        return self::$_connection;
+
+        return self::$connection;
     }
 
     /**
      * @return array
      */
-    private static function _getDBConfig() : array
+    private static function getDBConfig() : array
     {
-		try {
-			return json_decode(file_get_contents('/vagrant/app/config/mysql.json'), true);
-		} catch (\Exception $e) {
-			die('Unable to read DB config file');
-		}
+        try {
+            return json_decode(file_get_contents('/vagrant/app/config/mysql.json'), true);
+        } catch (\Exception $e) {
+            die('Unable to read DB config file');
+        }
     }
 }

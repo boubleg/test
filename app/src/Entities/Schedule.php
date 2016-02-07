@@ -28,43 +28,48 @@ class Schedule extends EntityBase
     ];
 
     /** @var  int */
-    protected $_weekday;
+    protected $weekday;
 
     /** @var  bool */
-    protected $_isAllDay;
+    protected $isAllDay;
 
     /**
      * I cannot see a reason here to store it not as a string
      *
      * @var  string
      */
-    protected $_startHour;
+    protected $startHour;
 
     /**
      * Same here
      *
      * @var  string
      */
-    protected $_stopHour;
-
-	/**
-	 * I would usually not have this field here, rather making Vendor object have multiple Schedules
-	 * but since in that task I'm not using Vendor entities anywhere it would've lead to unnecessary complexity
-	 *
-	 * @var  int
-	 */
-    protected $_vendorID;
+    protected $stopHour;
 
     /**
-	 * @param int $vendorId
+     * I would usually not have this field here, rather making Vendor object have multiple Schedules
+     * but since in that task I'm not using Vendor entities anywhere it would've lead to unnecessary complexity
+     *
+     * @var  int
+     */
+    protected $vendorID;
+
+    /**
+     * @param int $vendorId
      * @param int $weekday
      * @param bool|false $isAllDay
      * @param string $startHour
      * @param string $stopHour
      */
-    public function __construct(int $vendorId, int $weekday, bool $isAllDay = false, string $startHour = '', string $stopHour = '')
-    {
-		$this->setVendorID($vendorId);
+    public function __construct(
+        int $vendorId,
+        int $weekday,
+        bool $isAllDay = false,
+        string $startHour = '',
+        string $stopHour = ''
+    ) {
+        $this->setVendorID($vendorId);
         $this->setWeekday($weekday);
         $this->setIsAllDay($isAllDay);
         $this->setStartHour($startHour);
@@ -74,24 +79,30 @@ class Schedule extends EntityBase
     /**
      * Will create a Schedule object based on the data from vendor_special_day table or return null in case it is closed all day
      *
-	 * @param int $vendorId
+     * @param int $vendorId
      * @param string $date
      * @param string $eventType
      * @param string $isAllDay
      * @param string $startHour
      * @param string $endHour
-     * @return Schedule|null
+     * @return Schedule|false
      */
-    public static function createFromSpecialDay(int $vendorId, string $date, string $eventType, string $isAllDay, string $startHour, string $endHour)
-    {
+    public static function createFromSpecialDay(
+        int $vendorId,
+        string $date,
+        string $eventType,
+        string $isAllDay,
+        string $startHour,
+        string $endHour
+    ) {
         //if it is closed all day there simply will not be a schedule for that day
         if ((bool)$isAllDay && $eventType == self::EVENT_TYPE_CLOSED) {
-            return null;
+            return false;
         }
 
         return new self(
-			$vendorId,
-            self::_dateToDayNumber($date),
+            $vendorId,
+            self::dateToDayNumber($date),
             (bool)$isAllDay && $eventType == self::EVENT_TYPE_OPENED ? true : false,
             $startHour,
             $endHour
@@ -103,7 +114,7 @@ class Schedule extends EntityBase
      */
     public function getWeekday() : int
     {
-        return $this->_weekday;
+        return $this->weekday;
     }
 
     /**
@@ -112,7 +123,8 @@ class Schedule extends EntityBase
      */
     public function setWeekday(int $weekday) : Schedule
     {
-        $this->_weekday = $weekday;
+        $this->weekday = $weekday;
+
         return $this;
     }
 
@@ -121,7 +133,7 @@ class Schedule extends EntityBase
      */
     public function isAllDay() : bool
     {
-        return $this->_isAllDay;
+        return $this->isAllDay;
     }
 
     /**
@@ -130,7 +142,8 @@ class Schedule extends EntityBase
      */
     public function setIsAllDay(bool $isAllDay) : Schedule
     {
-        $this->_isAllDay = $isAllDay;
+        $this->isAllDay = $isAllDay;
+
         return $this;
     }
 
@@ -139,7 +152,7 @@ class Schedule extends EntityBase
      */
     public function getStartHour() : string
     {
-        return $this->_startHour;
+        return $this->startHour;
     }
 
     /**
@@ -148,7 +161,8 @@ class Schedule extends EntityBase
      */
     public function setStartHour(string $startHour) : Schedule
     {
-        $this->_startHour = $startHour;
+        $this->startHour = $startHour;
+
         return $this;
     }
 
@@ -157,7 +171,7 @@ class Schedule extends EntityBase
      */
     public function getStopHour() : string
     {
-        return $this->_stopHour;
+        return $this->stopHour;
     }
 
     /**
@@ -166,33 +180,35 @@ class Schedule extends EntityBase
      */
     public function setStopHour(string $stopHour) : Schedule
     {
-        $this->_stopHour = $stopHour;
+        $this->stopHour = $stopHour;
+
         return $this;
     }
 
-	/**
-	 * @return int
-	 */
-	public function getVendorID() : int
-	{
-		return $this->_vendorID;
-	}
+    /**
+     * @return int
+     */
+    public function getVendorID() : int
+    {
+        return $this->vendorID;
+    }
 
-	/**
-	 * @param int $vendorID
-	 * @return Schedule
-	 */
-	public function setVendorID($vendorID) : Schedule
-	{
-		$this->_vendorID = $vendorID;
-		return $this;
-	}
+    /**
+     * @param int $vendorID
+     * @return Schedule
+     */
+    public function setVendorID($vendorID) : Schedule
+    {
+        $this->vendorID = $vendorID;
+
+        return $this;
+    }
 
     /**
      * @param string $date
      * @return int
      */
-    protected static function _dateToDayNumber(string $date) : int
+    protected static final function dateToDayNumber(string $date) : int
     {
         return self::$daysToNumbers[date('l', strtotime($date))];
     }
@@ -203,10 +219,10 @@ class Schedule extends EntityBase
     public function __toString() : string
     {
         $startHourString = $this->getStartHour() ? RepositoryBase::encloseString($this->getStartHour()) : 'null';
-        $stopHourString = $this->getStopHour() ?  RepositoryBase::encloseString($this->getStopHour()) : 'null';
+        $stopHourString = $this->getStopHour() ? RepositoryBase::encloseString($this->getStopHour()) : 'null';
 
         return
-			'(' . $this->getVendorID() . ', ' .
+            '(' . $this->getVendorID() . ', ' .
             $this->getWeekday() . ', ' .
             (int)$this->isAllDay() . ', ' .
             $startHourString . ', ' .

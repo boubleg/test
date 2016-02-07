@@ -10,24 +10,26 @@ use \KhaibullinTest\Repository\VendorRepository as vr;
  */
 final class Main
 {
-	/**
-	 * Main constructor.
-	 * @param bool $populateDB
-	 */
+    /**
+     * Main constructor.
+     * @param bool $populateDB
+     */
     public function __construct($populateDB = false)
     {
-        spl_autoload_register(function ($class) {
-            $prefix = 'KhaibullinTest\\';
-            $baseDir = __DIR__ . '/../app/src/';
-            if (strncmp($prefix, $class, strlen($prefix)) !== 0) {
-                return;
+        spl_autoload_register(
+            function ($class) {
+                $prefix = 'KhaibullinTest\\';
+                $baseDir = __DIR__ . '/../app/src/';
+                if (strncmp($prefix, $class, strlen($prefix)) !== 0) {
+                    return;
+                }
+                $relative_class = substr($class, strlen($prefix));
+                $file = $baseDir . str_replace('\\', '/', $relative_class) . '.php';
+                if (file_exists($file)) {
+                    require $file;
+                }
             }
-            $relative_class = substr($class, strlen($prefix));
-            $file = $baseDir . str_replace('\\', '/', $relative_class) . '.php';
-            if (file_exists($file)) {
-                require $file;
-            }
-        });
+        );
 
         if ($populateDB) {
             $this->_populateTestDB();
@@ -84,14 +86,14 @@ final class Main
         for ($i = 1; $i < $schedulesAmount; $i++) {
             $vendorId = mt_rand(1, $vendorsAmount);
             $allDay = mt_rand(0, 1);
-            $weekday =  mt_rand(1, 7);
+            $weekday = mt_rand(1, 7);
 
             if ($allDay) {
                 $startHourString = $stopHourString = 'null';
             } else {
                 $startHour = mt_rand(0, 19);
                 $startHourString = "'" . $startHour . ":" . str_pad(mt_rand(0, 59), 2, '0', STR_PAD_LEFT) . "'";
-                $stopHourString = "'" . ($startHour + 4)  . ":" . str_pad(mt_rand(0, 59), 2, '0', STR_PAD_LEFT) . "'";
+                $stopHourString = "'" . ($startHour + 4) . ":" . str_pad(mt_rand(0, 59), 2, '0', STR_PAD_LEFT) . "'";
             }
 
             $sql .= "($vendorId, $weekday, $allDay, $startHourString, $stopHourString),";
@@ -113,7 +115,7 @@ final class Main
             } else {
                 $startHour = mt_rand(0, 19);
                 $startHourString = "'" . $startHour . ":" . str_pad(mt_rand(0, 59), 2, '0', STR_PAD_LEFT) . "'";
-                $stopHourString = "'" . ($startHour + 4)  . ":" . str_pad(mt_rand(0, 59), 2, '0', STR_PAD_LEFT) . "'";
+                $stopHourString = "'" . ($startHour + 4) . ":" . str_pad(mt_rand(0, 59), 2, '0', STR_PAD_LEFT) . "'";
             }
 
             $sql .= "($vendorId, $specialDate, $eventType, $allDay, $startHourString, $stopHourString),";
