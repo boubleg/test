@@ -120,6 +120,7 @@ final class ScheduleRepository extends RepositoryBase
      * Will write an array of Schedules created from vendor_special_day data to the special_date table
      *
      * @param Schedule[] $schedules
+     *
      * @return bool
      */
     public static function writeSchedulesToDB(array $schedules) : bool

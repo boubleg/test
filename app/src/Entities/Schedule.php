@@ -60,11 +60,11 @@ class Schedule extends EntityBase
     protected $vendorID;
 
     /**
-     * @param int $vendorId
-     * @param int $weekday
+     * @param int        $vendorId
+     * @param int        $weekday
      * @param bool|false $isAllDay
-     * @param string $startHour
-     * @param string $stopHour
+     * @param string     $startHour
+     * @param string     $stopHour
      */
     public function __construct(
         int $vendorId,
@@ -89,6 +89,7 @@ class Schedule extends EntityBase
      * @param string $isAllDay
      * @param string $startHour
      * @param string $endHour
+     *
      * @return Schedule|false
      */
     public static function createFromSpecialDay(
@@ -123,6 +124,7 @@ class Schedule extends EntityBase
 
     /**
      * @param int $weekday
+     *
      * @return Schedule
      */
     public function setWeekday(int $weekday) : Schedule
@@ -142,6 +144,7 @@ class Schedule extends EntityBase
 
     /**
      * @param boolean $isAllDay
+     *
      * @return Schedule
      */
     public function setIsAllDay(bool $isAllDay) : Schedule
@@ -161,6 +164,7 @@ class Schedule extends EntityBase
 
     /**
      * @param string $startHour
+     *
      * @return Schedule
      */
     public function setStartHour(string $startHour) : Schedule
@@ -180,6 +184,7 @@ class Schedule extends EntityBase
 
     /**
      * @param string $stopHour
+     *
      * @return Schedule
      */
     public function setStopHour(string $stopHour) : Schedule
@@ -199,6 +204,7 @@ class Schedule extends EntityBase
 
     /**
      * @param int $vendorID
+     *
      * @return Schedule
      */
     public function setVendorID($vendorID) : Schedule
@@ -210,6 +216,7 @@ class Schedule extends EntityBase
 
     /**
      * @param string $date
+     *
      * @return int
      */
     protected static final function dateToDayNumber(string $date) : int

@@ -12,6 +12,7 @@ abstract class RepositoryBase
 {
     /**
      * @param string $sql
+     *
      * @return array|bool
      */
     public static function query(string $sql)
@@ -21,6 +22,7 @@ abstract class RepositoryBase
 
     /**
      * @param string $str
+     *
      * @return string
      */
     public static function encloseString(string $str) : string
