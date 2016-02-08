@@ -29,6 +29,9 @@ final class Main
             }
         );
 
+        $dBTimeZone = DBManager::getDBTimeZone();
+        date_default_timezone_set($dBTimeZone[0]["@@system_time_zone"]);
+
         if ($populateDB) {
             $this->populateTestDB();
         }
