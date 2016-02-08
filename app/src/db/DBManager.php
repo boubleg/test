@@ -8,6 +8,14 @@ namespace KhaibullinTest\db;
  */
 class DBManager implements DBManagerInterface
 {
+    private function __construct()
+    {
+    }
+
+    private function __clone()
+    {
+    }
+
     /**
      * @param string $sql
      * @return bool|array
