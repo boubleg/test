@@ -16,19 +16,19 @@ final class MysqlDBManager extends DBManager
      * @return bool|array
      * @throws \Exception
      */
-    public static function query(string $sql)
+    public static function query($sql)
     {
-        $result = self::_getConnection()->query($sql);
+        $result = self::getConnection()->query($sql);
         if (false === $result) {
-            self::_getConnection()->rollback();
-            echo substr($sql, 0, 500) . '... failed: ' . self::_getConnection()->error . "\n";
+            self::getConnection()->rollback();
+            echo substr($sql, 0, 500) . '... failed: ' . self::getConnection()->error . "\n";
             throw new \Exception('Could not execute db query');
         } elseif ($result instanceof \mysqli_result) {
-            self::_getConnection()->commit();
+            self::getConnection()->commit();
 
             return $result->fetch_all(MYSQLI_ASSOC);
         } else {
-            self::_getConnection()->commit();
+            self::getConnection()->commit();
 
             return $result;
         }
@@ -37,7 +37,7 @@ final class MysqlDBManager extends DBManager
     /**
      * @return \mysqli
      */
-    private static function _getConnection()
+    private static function getConnection()
     {
         if (null !== self::$connection && !self::$connection->ping()) {
             if (self::$connection instanceof \mysqli) {

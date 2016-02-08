@@ -14,7 +14,7 @@ abstract class RepositoryBase
      * @param string $sql
      * @return array|bool
      */
-    public static function query(string $sql)
+    public static function query($sql)
     {
         return DBManager::query($sql);
     }
@@ -23,7 +23,7 @@ abstract class RepositoryBase
      * @param string $str
      * @return string
      */
-    public static function encloseString(string $str)
+    public static function encloseString($str)
     {
         return "'$str'";
     }

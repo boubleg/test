@@ -67,11 +67,11 @@ class Schedule extends EntityBase
      * @param string $stopHour
      */
     public function __construct(
-        int $vendorId,
-        int $weekday,
-        bool $isAllDay = false,
-        string $startHour = '',
-        string $stopHour = ''
+        $vendorId,
+        $weekday,
+        $isAllDay = false,
+        $startHour = '',
+        $stopHour = ''
     ) {
         $this->setVendorID($vendorId);
         $this->setWeekday($weekday);
@@ -92,12 +92,12 @@ class Schedule extends EntityBase
      * @return Schedule|false
      */
     public static function createFromSpecialDay(
-        int $vendorId,
-        string $date,
-        string $eventType,
-        string $isAllDay,
-        string $startHour,
-        string $endHour
+        $vendorId,
+        $date,
+        $eventType,
+        $isAllDay,
+        $startHour,
+        $endHour
     ) {
         //if it is closed all day there simply will not be a schedule for that day
         if ((bool)$isAllDay && $eventType == self::EVENT_TYPE_CLOSED) {
@@ -125,7 +125,7 @@ class Schedule extends EntityBase
      * @param int $weekday
      * @return Schedule
      */
-    public function setWeekday(int $weekday)
+    public function setWeekday($weekday)
     {
         $this->weekday = $weekday;
 
@@ -135,7 +135,7 @@ class Schedule extends EntityBase
     /**
      * @return boolean
      */
-    public function isAllDay() : bool
+    public function isAllDay()
     {
         return $this->isAllDay;
     }
@@ -144,7 +144,7 @@ class Schedule extends EntityBase
      * @param boolean $isAllDay
      * @return Schedule
      */
-    public function setIsAllDay(bool $isAllDay)
+    public function setIsAllDay($isAllDay)
     {
         $this->isAllDay = $isAllDay;
 
@@ -163,7 +163,7 @@ class Schedule extends EntityBase
      * @param string $startHour
      * @return Schedule
      */
-    public function setStartHour(string $startHour)
+    public function setStartHour($startHour)
     {
         $this->startHour = $startHour;
 
@@ -182,7 +182,7 @@ class Schedule extends EntityBase
      * @param string $stopHour
      * @return Schedule
      */
-    public function setStopHour(string $stopHour)
+    public function setStopHour($stopHour)
     {
         $this->stopHour = $stopHour;
 
@@ -192,7 +192,7 @@ class Schedule extends EntityBase
     /**
      * @return int
      */
-    public function getVendorID() : int
+    public function getVendorID()
     {
         return $this->vendorID;
     }
@@ -212,7 +212,7 @@ class Schedule extends EntityBase
      * @param string $date
      * @return int
      */
-    protected static final function dateToDayNumber(string $date)
+    protected static final function dateToDayNumber($date)
     {
         return self::$daysToNumbers[date('l', strtotime($date))];
     }

@@ -12,5 +12,5 @@ interface DBManagerInterface
      * @param string $sql
      * @return mixed
      */
-    public static function query(string $sql);
+    public static function query($sql);
 }

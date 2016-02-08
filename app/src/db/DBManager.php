@@ -12,7 +12,7 @@ class DBManager implements DBManagerInterface
      * @param string $sql
      * @return bool|array
      */
-    public static function query(string $sql)
+    public static function query($sql)
     {
         $adapter = '' === self::getDBConfig('adapter') ? self::getDBConfig('adapter') : 'mysql';
         switch ($adapter) {
@@ -28,7 +28,7 @@ class DBManager implements DBManagerInterface
      * @param $key string|null
      * @return array|string
      */
-    public static function getDBConfig(string $key = null)
+    public static function getDBConfig($key = null)
     {
         try {
             $config = json_decode(file_get_contents('/vagrant/app/config/db.json'), true);

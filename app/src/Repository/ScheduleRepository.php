@@ -140,7 +140,7 @@ final class ScheduleRepository extends RepositoryBase
      *
      * @param string $backupTableName
      */
-    public static function backupSchedules(string $backupTableName)
+    public static function backupSchedules($backupTableName)
     {
         $sql = "DROP TABLE IF EXISTS $backupTableName;";
         self::query($sql);
@@ -153,7 +153,7 @@ final class ScheduleRepository extends RepositoryBase
     /**
      * @param string $backupTableName
      */
-    public static function restoreBackupSchedules(string $backupTableName)
+    public static function restoreBackupSchedules($backupTableName)
     {
         $sql = "TRUNCATE TABLE vendor_schedule";
         self::query($sql);
