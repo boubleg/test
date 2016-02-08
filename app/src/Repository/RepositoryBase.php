@@ -1,12 +1,12 @@
 <?php
 
-namespace KhaibullinTest\Repository;
+namespace Khaibullin\Repository;
 
-use KhaibullinTest\db\DBManager;
+use Khaibullin\db\DBManager;
 
 /**
  * Class RepositoryBase
- * @package KhaibullinTest\Repository
+ * @package Khaibullin\Repository
  */
 abstract class RepositoryBase
 {

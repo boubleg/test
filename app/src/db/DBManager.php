@@ -1,6 +1,6 @@
 <?php
 
-namespace KhaibullinTest\db;
+namespace Khaibullin\db;
 
 /**
  * Class DBManager
@@ -26,7 +26,7 @@ class DBManager implements DBManagerInterface
         switch ($adapter) {
             case 'mysql':
             default:
-                $className = 'KhaibullinTest\db\MysqlDBManager';
+                $className = 'Khaibullin\db\MysqlDBManager';
                 break;
         }
         return call_user_func("$className::query", $sql);

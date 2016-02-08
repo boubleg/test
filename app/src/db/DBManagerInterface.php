@@ -1,10 +1,10 @@
 <?php
 
-namespace KhaibullinTest\db;
+namespace Khaibullin\db;
 
 /**
  * Interface DBManagerInterface
- * @package KhaibullinTest\db
+ * @package Khaibullin\db
  */
 interface DBManagerInterface
 {
