@@ -5,11 +5,18 @@ namespace Khaibullin\Repository;
 use Khaibullin\Entities\Schedule;
 
 /**
+ * Class responsible for the manipulation with the data from the DB regarding schedules and special days
+ *
  * Class VendorRepository
  * @package Repository
  */
 final class ScheduleRepository extends RepositoryBase
 {
+    /**
+     * Will remove all schedules that are going to be updated with the values from vendor_special_day table
+     *
+     * @return void
+     */
     public static function deleteAllSchedulesForSpecials()
     {
         $sql = "SELECT
@@ -60,7 +67,9 @@ final class ScheduleRepository extends RepositoryBase
     }
 
     /**
-     * @return array
+     * Will retrieve all values vendor_special_day that will be used in the special_date table
+     *
+     * @return Schedule[]
      */
     public static function getAllSpecialDaysAsSchedules()
     {
@@ -108,7 +117,9 @@ final class ScheduleRepository extends RepositoryBase
     }
 
     /**
-     * @param array $schedules
+     * Will write an array of Schedules created from vendor_special_day data to the special_date table
+     *
+     * @param Schedule[] $schedules
      * @return bool
      */
     public static function writeSchedulesToDB(array $schedules)
@@ -136,9 +147,12 @@ final class ScheduleRepository extends RepositoryBase
 
 
     /**
-     * Generally I would prefer to have the whole DB backed up somewhere
+     * Will copy the vendor_schedule table into a new table with its name passed as an argument
      *
+     * @todo Generally I would prefer to have the whole DB backed up somewhere
      * @param string $backupTableName
+     *
+     * @return void
      */
     public static function backupSchedules($backupTableName)
     {
@@ -151,7 +165,11 @@ final class ScheduleRepository extends RepositoryBase
     }
 
     /**
+     * Will overwrite values in the vendor_schedule table from the back up table with name passed as an argument
+     *
      * @param string $backupTableName
+     *
+     * @return void
      */
     public static function restoreBackupSchedules($backupTableName)
     {

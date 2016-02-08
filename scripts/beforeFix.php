@@ -37,6 +37,10 @@ final class Main
         $this->main();
     }
 
+
+    /**
+     * @return void
+     */
     private function main()
     {
         $backupTableName = DBManager::getDBConfig('backupTableName');
@@ -67,6 +71,11 @@ final class Main
     }
 
 
+    /**
+     * Populates DB with some not really consistent data just to test the execution time
+     *
+     * @return void
+     */
     private function populateTestDB()
     {
         echo "Begin populating DB with test data\n";

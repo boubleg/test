@@ -3,6 +3,8 @@
 namespace Khaibullin\db;
 
 /**
+ * Class responsible for managing MySQL communication
+ *
  * Class MysqlDBManager
  * @package Khaibullin\db
  */
