@@ -10,6 +10,7 @@ final class Main
 {
     /**
      * Main constructor.
+     * 
      * @param bool $populateDB
      */
     public function __construct($populateDB = false)

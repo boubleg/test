@@ -52,7 +52,7 @@ class DBManager implements DBManagerInterface
     /**
      * Will return either a whole config file or a single value if $key is provided
      *
-     * @param $key string|null  a single key of the config that needs to be returned
+     * @param  string|null  $key a single key of the config that needs to be returned
      * @return array|string
      */
     public static function getDBConfig($key = null)

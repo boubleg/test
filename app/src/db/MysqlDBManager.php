@@ -14,7 +14,7 @@ final class MysqlDBManager extends DBManager
     private static $connection = null;
 
     /**
-     * @param string $sql
+     * @param  string     $sql
      * @return bool|array
      * @throws \Exception
      */
