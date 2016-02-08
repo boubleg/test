@@ -32,10 +32,14 @@ class DBManager implements DBManagerInterface
         return call_user_func("$className::query", $sql);
     }
 
-    public static function getDBTimeZone()
+    /**
+     * @return string
+     */
+    public static function getDBTimeZone() : string
     {
         $sql = "SELECT @@system_time_zone;";
-        return self::query($sql);
+        $result = self::query($sql);
+        return $result[0]["@@system_time_zone"];
     }
 
     /**
