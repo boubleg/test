@@ -1,8 +1,8 @@
 <?php
 
-namespace KhaibullinTest\Repository;
+namespace Khaibullin\Repository;
 
-use KhaibullinTest\Entities\Schedule;
+use Khaibullin\Entities\Schedule;
 
 /**
  * Class VendorRepository

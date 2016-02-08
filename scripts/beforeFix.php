@@ -1,9 +1,7 @@
 <?php
 
-$start = microtime(true);
-
-use \KhaibullinTest\db\DBManager;
-use \KhaibullinTest\Repository\ScheduleRepository as sr;
+use Khaibullin\db\DBManager;
+use Khaibullin\Repository\ScheduleRepository as sr;
 
 /**
  * Class Main
@@ -18,7 +16,7 @@ final class Main
     {
         spl_autoload_register(
             function ($class) {
-                $prefix = 'KhaibullinTest\\';
+                $prefix = 'Khaibullin\\';
                 $baseDir = __DIR__ . '/../app/src/';
                 if (strncmp($prefix, $class, strlen($prefix)) !== 0) {
                     return;
@@ -126,6 +124,8 @@ final class Main
         echo "DB populated\n";
     }
 }
+
+$start = microtime(true);
 
 $populateDB = isset($argv[1]) && '--populate' === $argv[1];
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace KhaibullinTest\Entities;
+namespace Khaibullin\Entities;
 
-use KhaibullinTest\Repository\RepositoryBase;
+use Khaibullin\Repository\RepositoryBase;
 
 /**
  * Class Schedule
- * @package KhaibullinTest\Entities
+ * @package Khaibullin\Entities
  */
 class Schedule extends EntityBase
 {

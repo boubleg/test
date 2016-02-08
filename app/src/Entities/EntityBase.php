@@ -1,10 +1,10 @@
 <?php
 
-namespace KhaibullinTest\Entities;
+namespace Khaibullin\Entities;
 
 /**
  * Class EntityBase
- * @package KhaibullinTest\Entities
+ * @package Khaibullin\Entities
  */
 abstract class EntityBase
 {

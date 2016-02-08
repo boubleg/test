@@ -1,10 +1,10 @@
 <?php
 
-namespace KhaibullinTest\db;
+namespace Khaibullin\db;
 
 /**
  * Class MysqlDBManager
- * @package KhaibullinTest\db
+ * @package Khaibullin\db
  */
 final class MysqlDBManager extends DBManager
 {
