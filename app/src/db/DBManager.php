@@ -3,11 +3,16 @@
 namespace Khaibullin\db;
 
 /**
+ * Main class responsible for the DB connection, execution of the queries and so on
+ *
  * Class DBManager
  * @package db
  */
 class DBManager implements DBManagerInterface
 {
+    /**
+     * To prevent creation the instances of that class
+     */
     private function __construct()
     {
     }
@@ -33,6 +38,8 @@ class DBManager implements DBManagerInterface
     }
 
     /**
+     * Returns DB timezone which is required because of the usage of date() function in the Schedule class
+     *
      * @return string
      */
     public static function getDBTimeZone() : string
@@ -43,7 +50,9 @@ class DBManager implements DBManagerInterface
     }
 
     /**
-     * @param $key string|null
+     * Will return either a whole config file or a single value if $key is provided
+     *
+     * @param $key string|null  a single key of the config that needs to be returned
      * @return array|string
      */
     public static function getDBConfig(string $key = null)

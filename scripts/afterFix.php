@@ -31,6 +31,9 @@ final class Main
         $this->main();
     }
 
+    /**
+     * @return void
+     */
     private function main()
     {
         $backupTableName = DBManager::getDBConfig('backupTableName');
