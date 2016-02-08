@@ -94,8 +94,8 @@ final class ScheduleRepository extends RepositoryBase
                 $row['special_date'],
                 $row['event_type'],
                 $row['all_day'],
-                $row['start_hour'] ?? '',
-                $row['stop_hour'] ?? ''
+                isset($row['start_hour']) ? $row['start_hour'] : '',
+                isset($row['stop_hour']) ? $row['stop_hour'] : ''
             )
             ) {
                 continue;
@@ -111,7 +111,7 @@ final class ScheduleRepository extends RepositoryBase
      * @param array $schedules
      * @return bool
      */
-    public static function writeSchedulesToDB(array $schedules) : bool
+    public static function writeSchedulesToDB(array $schedules)
     {
         $sql = 'INSERT INTO vendor_schedule(vendor_id, weekday, all_day, start_hour, stop_hour) VALUES ';
 

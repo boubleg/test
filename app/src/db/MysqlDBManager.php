@@ -37,7 +37,7 @@ final class MysqlDBManager extends DBManager
     /**
      * @return \mysqli
      */
-    private static function _getConnection() : \mysqli
+    private static function _getConnection()
     {
         if (null !== self::$connection && !self::$connection->ping()) {
             if (self::$connection instanceof \mysqli) {

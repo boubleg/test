@@ -14,7 +14,7 @@ class DBManager implements DBManagerInterface
      */
     public static function query(string $sql)
     {
-        $adapter = self::getDBConfig('adapter') ?? 'mysql';
+        $adapter = '' === self::getDBConfig('adapter') ? self::getDBConfig('adapter') : 'mysql';
         switch ($adapter) {
             case 'mysql':
             default:
@@ -32,7 +32,11 @@ class DBManager implements DBManagerInterface
     {
         try {
             $config = json_decode(file_get_contents('/vagrant/app/config/db.json'), true);
-            return null === $key ? $config : $config[$key] ?? '';
+            if (null === $key) {
+                return $config;
+            } else {
+                return isset($config[$key]) ? $config[$key] : '';
+            }
         } catch (\Exception $e) {
             die('Unable to read DB config file');
         }

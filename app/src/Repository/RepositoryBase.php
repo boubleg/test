@@ -23,7 +23,7 @@ abstract class RepositoryBase
      * @param string $str
      * @return string
      */
-    public static function encloseString(string $str) : string
+    public static function encloseString(string $str)
     {
         return "'$str'";
     }
