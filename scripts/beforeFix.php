@@ -29,8 +29,7 @@ final class Main
             }
         );
 
-        $dBTimeZone = DBManager::getDBTimeZone();
-        date_default_timezone_set($dBTimeZone[0]["@@system_time_zone"]);
+        date_default_timezone_set(DBManager::getDBTimeZone());
 
         if ($populateDB) {
             $this->populateTestDB();
@@ -52,12 +51,18 @@ final class Main
             echo "Done\nWriting new schedules based on the special days\n";
             sr::writeSchedulesToDB($specialDays);
             echo "Done\n";
-        } catch (\Exception $e) {
-            echo "Exception caught: " . $e->getMessage() . "\n";
+        } catch (\Exception $exceptionMain) {
+            echo "Exception caught: " . $exceptionMain->getMessage() . "\n";
             echo "Restoring data from the backup\n";
-            sr::restoreBackupSchedules($backupTableName);
-            echo "Done\n";
-            die;
+            try {
+                sr::restoreBackupSchedules($backupTableName);
+                echo "Done\n";
+                die;
+            } catch (\Exception $exceptionBackup) {
+                echo "Exception caught: " . $exceptionBackup->getMessage() . "\n";
+                echo "Failed to restore DB\n";
+                die;
+            }
         }
     }
 
