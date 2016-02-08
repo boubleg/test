@@ -127,7 +127,9 @@ final class Main
     }
 }
 
-$main = new Main('--populate' === $argv[1]);
+$populateDB = isset($argv[1]) && '--populate' === $argv[1];
+
+$main = new Main($populateDB);
 
 echo "Time spent: " . (microtime(true) - $start) . "s\n";
 die;

@@ -62,7 +62,7 @@ final class ScheduleRepository extends RepositoryBase
     /**
      * @return array
      */
-    public static function getAllSpecialDaysAsSchedules() : array
+    public static function getAllSpecialDaysAsSchedules()
     {
         $sql =
             "SELECT

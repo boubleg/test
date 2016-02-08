@@ -31,7 +31,7 @@ class DBManager implements DBManagerInterface
     public static function getDBConfig($key = null)
     {
         try {
-            $config = json_decode(file_get_contents('/vagrant/app/config/db.json'), true);
+            $config = json_decode(file_get_contents(__DIR__ . '/../../../app/config/db.json'), true);
             if (null === $key) {
                 return $config;
             } else {
